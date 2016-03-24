@@ -1,3 +1,39 @@
+# projectatomic/v1.10-migrator
+
+This is the same as the upstream
+[docker/v1.10-migrator](https://github.com/docker/v1.10-migrator)
+project except that the resulting image is compatible with
+the [atomic](https://github.com/projectatomic/atomic)
+command-line. Thus, you should be able to migrate your
+containers by simply doing:
+
+```
+  atomic run projectatomic/v1.10-migrator
+```
+
+This will work for most setups. If you have a more
+complicated setup, then you will need to pass the required
+options yourself:
+
+```
+  atomic run projectatomic/v1.10-migrator \
+    --graph /custom/path \
+    --storage-driver overlay
+```
+
+Upstream reference and documentation:
+
+- https://github.com/docker/v1.10-migrator
+- https://docs.docker.com/engine/migration/
+- https://hub.docker.com/r/docker/v1.10-migrator/
+- https://hub.docker.com/r/projectatomic/v1.10-migrator/
+
+To build the image, simply run:
+
+```
+  make docker-image-base
+```
+
 # docker/v1.10-migrator
 
 Starting from `v1.10` docker uses content addressable IDs for the images and layers instead of using generated ones. This tool calculates SHA256 checksums for docker layer content, so that they don't need to be recalculated when the daemon starts for the first time.

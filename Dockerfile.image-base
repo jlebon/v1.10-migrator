@@ -1,0 +1,22 @@
+FROM scratch
+MAINTAINER Jonathan Lebon <jlebon@redhat.com>
+
+ADD helper.sh /
+ADD v1.10-migrator-local /
+ENTRYPOINT ["/bin/bash", "/helper.sh"]
+
+# We're sort of being hacky here by directly mounting /bin
+# and /lib64 to avoid having to (1) statically link against
+# libdm and (2) add all the deps needed to get our helper
+# script to work. The alternative is to write the helper
+# script in Go, or directly integrate it into the v1.10
+# migrator.
+
+# -t      make the output of the migrator prettier
+# /dev    needed for devmapper
+# /lib64  needed for ld to work properly (we can't just
+#         mount /usr since SOs encode /lib64/...)
+# /bin    needed for our helper script
+# /tmp    needed by migrator
+# /host   needed for access to the docker graph, wherever it may be
+LABEL RUN="docker run -t --rm --privileged -v /dev:/dev -v /lib64:/lib64:ro -v /bin:/bin:ro -v /tmp:/tmp -v /:/host IMAGE"

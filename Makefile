@@ -7,7 +7,6 @@ build:
 v1.10-migrator-local:
 	godep go build -o $@ .
 
-
 test: # v1.10-migrator
 ifndef DOCKER_VERSION
 	@echo "specify DOCKER_VERSION (1.9.1, 1.8.3 ...)"; exit 1;
@@ -28,4 +27,7 @@ endif
 docker-image: v1.10-migrator Dockerfile.image
 	tar -cf - $^ | docker build -f Dockerfile.image -t v1.10-migrator -
 
-.PHONY: build test docker-image
+docker-image-base: v1.10-migrator-local
+	docker build -f Dockerfile.image-base -t v1.10-migrator .
+
+.PHONY: build test docker-image docker-image-base
